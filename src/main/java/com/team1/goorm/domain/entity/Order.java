@@ -28,7 +28,7 @@ public class Order {
     private BigDecimal totalAmount;
 
     @Column(name = "status")
-    private String status;
+    private OrderStatus status; // READY, DONE, CANCELLED 3가지 타입만 가능
 
     @Column(name = "order_name")
     private String orderName;
@@ -36,7 +36,13 @@ public class Order {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    // 양방향 매핑
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<OrderProduct> orderProducts = new ArrayList<>();
+
+    /** 주문 완료 처리 */
+    public void markAsDone() {
+        this.status = OrderStatus.DONE;
+    }
 }
