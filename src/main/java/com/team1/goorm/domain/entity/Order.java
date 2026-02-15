@@ -27,6 +27,7 @@ public class Order {
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private OrderStatus status; // READY, DONE, CANCELLED 3가지 타입만 가능
 
