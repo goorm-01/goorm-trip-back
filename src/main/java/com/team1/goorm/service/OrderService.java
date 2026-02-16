@@ -16,10 +16,7 @@ import java.math.BigDecimal;
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,6 +33,7 @@ public class OrderService {
                 .user(user)
                 .status(OrderStatus.READY)
                 .createdAt(LocalDateTime.now())
+                .orderNumber("temp_id")
                 .build();
         Order savedOrder = orderRepository.save(order);
 
@@ -48,8 +46,8 @@ public class OrderService {
         List<Product> products = getProducts(productIds);
 
         // 상품 가격 계산을 위한 Map 생성(key - id, value - Product)
-        Map<Long, Product> productMap = products.stream()
-                .collect(Collectors.toMap(Product::getId, p -> p));
+        Map<Long, Product> productMap = new HashMap<>();
+        products.forEach(product -> productMap.put(product.getId(), product));
 
         // 상품의 총 가격 계산
         BigDecimal totalAmount = BigDecimal.ZERO;
@@ -111,7 +109,7 @@ public class OrderService {
 
     // 실제 주문 번호 생성 메서드
     private String createActualOrderId(Long id) {
-        return "ORD" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "-" + id;
+        return "ORD-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "-" + id;
     }
 
     // 결제키 생성 메서드
@@ -151,7 +149,6 @@ public class OrderService {
     @AllArgsConstructor
     public static class Product {
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
         private String name;
         private BigDecimal price;
