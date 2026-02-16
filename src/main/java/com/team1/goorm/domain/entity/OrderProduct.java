@@ -33,4 +33,15 @@ public class OrderProduct {
     // 상품의 가격(총 가격 X)
     @Column(name = "price")
     private BigDecimal price;
+
+    /** 주문 연결 메서드 */
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public OrderProduct(Long productId, int quantity, BigDecimal price) {
+        this.productId = productId;
+        this.quantity = quantity;
+        this.price = price;
+    }
 }
