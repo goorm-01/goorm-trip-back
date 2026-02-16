@@ -1,5 +1,8 @@
 package com.team1.goorm.controller;
 
+import com.team1.goorm.common.exception.BusinessException;
+import com.team1.goorm.common.exception.ErrorCode;
+import com.team1.goorm.common.response.ApiResponse;
 import com.team1.goorm.domain.dto.OrderPreviewRequestDto;
 import com.team1.goorm.domain.dto.OrderPreviewResponseDto;
 import com.team1.goorm.domain.dto.PaymentRequestDto;
@@ -23,26 +26,38 @@ public class OrderController {
     private final UserRepository userRepository;
 
     @PostMapping("/orders/preview")
-    public ResponseEntity<OrderPreviewResponseDto> createOrderPreview(
+    public ResponseEntity<ApiResponse<OrderPreviewResponseDto>> createOrderPreview(
             @RequestHeader("X-User-Id") Long userId,
             @RequestBody  OrderPreviewRequestDto requestDto
     ) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         OrderPreviewResponseDto response = orderService.createOrder(requestDto, user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                ApiResponse.success(
+                        "ORDER_SUCCESS",
+                        "주문 생성에 성공했습니다.",
+                        response
+                )
+        );
     }
 
     @PostMapping("/orders/payment")
-    public ResponseEntity<PaymentResponseDto> createPayment(
+    public ResponseEntity<ApiResponse<PaymentResponseDto>> createPayment(
             @RequestHeader("X-User-Id") Long userId,
             @RequestBody PaymentRequestDto requestDto
     ) throws AccessDeniedException {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         PaymentResponseDto response = orderService.createPayment(requestDto, user);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.success(
+                        "PAYMENT_SUCCESS",
+                        "결제에 성공했습니다.",
+                        response
+                )
+        );
     }
 }
