@@ -42,8 +42,25 @@ public class Order {
     @Builder.Default
     private List<OrderProduct> orderProducts = new ArrayList<>();
 
+    @Column(name = "order_number", unique = true, nullable = false)
+    private String orderNumber; // ORD-20260215-1 형식 저장
+
     /** 주문 완료 처리 */
     public void markAsDone() {
         this.status = OrderStatus.DONE;
+    }
+
+    /** 주문 정보 업데이트 (금액, 이름, 실제 주문 번호 등) */
+    public void updateOrderDetails(String orderName, BigDecimal totalAmount, String orderNumber, List<OrderProduct> orderProducts) {
+        this.orderName = orderName;
+        this.totalAmount = totalAmount;
+        this.orderNumber = orderNumber;
+        orderProducts.forEach(this::addOrderProduct);
+    }
+
+    /** 주문 상품 추가 */
+    public void addOrderProduct(OrderProduct orderProduct) {
+        this.orderProducts.add(orderProduct);
+        orderProduct.setOrder(this);
     }
 }
