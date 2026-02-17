@@ -22,6 +22,10 @@ public class Payment {
     @JoinColumn(name = "order_id")
     private Order order;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Column(name = "payment_key", updatable = false, nullable = false)
     private String paymentKey;
 
