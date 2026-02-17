@@ -8,27 +8,27 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Table(name = "Product")
+@Table(name = "Product") // 상품 정보
 public class Product {
     @Id
-    @Column(name = "product_id")
+    @Column(name = "product_id") // 상품 id
     private long productId;
 
-    @Column(name= "product_name")
+    @Column(name= "product_name") // 상품 이름
     private String productName;
 
-    @Column(name = "price")
+    @Column(name = "price") // 상품 가격
     private int price;
 
-    @Column(name = "image")
+    @Column(name = "image") // 상품 이미지
     private String image;
 
-    @Column(name = "image_2")
+    @Column(name = "image_2") // 상품 이미지 2
     private String image2;
 
-    @Column(name = "description")
+    @Column(name = "description") // 상품 설명
     private String description;
 
-    @Column(name = "category")
+    @Column(name = "category") // 상품 카테고리
     private String category;
 }
