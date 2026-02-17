@@ -18,17 +18,6 @@ public class OrderPreviewResponseDto {
     private LocalDateTime createdAt;
     private UserInfoDto userInfo;
 
-    @Getter
-    @Builder
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @AllArgsConstructor
-    public static class UserInfoDto {
-        @NotNull
-        private String name;
-        @NotNull
-        private String email;
-    }
-
     public static OrderPreviewResponseDto from(Order order) {
         return OrderPreviewResponseDto.builder()
                 .orderName(order.getOrderName())
