@@ -28,7 +28,7 @@ public class CartController {
     @PostMapping
     public ResponseEntity<ApiResponse<CartResponseDto>> addCart(@RequestBody CartRequestDto request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                ApiResponse.success("CART_ADD_SUCCESS", "장바구니에 상품이 추가되었습니다.", cartService.addCart(request))
+                ApiResponse.create("CART_ADD_SUCCESS", "장바구니에 상품이 추가되었습니다.", cartService.addCart(request))
         );
     }
 
