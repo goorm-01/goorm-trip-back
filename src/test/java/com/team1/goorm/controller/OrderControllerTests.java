@@ -27,6 +27,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -55,11 +56,13 @@ public class OrderControllerTests {
         OrderPreviewRequestDto.ProductItemDto item1 = OrderPreviewRequestDto.ProductItemDto.builder()
                 .productId(1L)
                 .quantity(1)
+                .departureDate(LocalDate.parse("2026-02-18"))
                 .build();
 
         OrderPreviewRequestDto.ProductItemDto item2 = OrderPreviewRequestDto.ProductItemDto.builder()
                 .productId(5L)
                 .quantity(2)
+                .departureDate(LocalDate.parse("2026-02-18"))
                 .build();
 
         OrderPreviewRequestDto requestDto = OrderPreviewRequestDto.builder()
@@ -67,7 +70,7 @@ public class OrderControllerTests {
                 .build();
         
         OrderPreviewResponseDto responseDto = OrderPreviewResponseDto.builder()
-                .orderId("ORD-20260216-1")
+                .orderNumber("ORD-20260218-1")
                 .orderName("임시 상품 1 외 1건")
                 .status(OrderStatus.READY)
                 .build();
@@ -84,9 +87,8 @@ public class OrderControllerTests {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.data.order_id").value("ORD-20260216-1"))
+                .andExpect(jsonPath("$.data.order_number").value("ORD-20260218-1"))
                 .andDo(print());
-
     }
 
     @Test
