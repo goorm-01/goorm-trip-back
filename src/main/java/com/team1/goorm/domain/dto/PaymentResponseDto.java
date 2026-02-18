@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class PaymentResponseDto {
-    private String orderId;
+    private String orderNumber;
     private String paymentKey;
     private OrderStatus status;
     private LocalDateTime requestedAt;
@@ -19,7 +19,7 @@ public class PaymentResponseDto {
 
     public static PaymentResponseDto from(Payment payment) {
         return PaymentResponseDto.builder()
-                .orderId(payment.getOrder().getOrderNumber())
+                .orderNumber(payment.getOrder().getOrderNumber())
                 .paymentKey(payment.getPaymentKey())
                 .status(payment.getOrder().getStatus())
                 .requestedAt(payment.getOrder().getCreatedAt())

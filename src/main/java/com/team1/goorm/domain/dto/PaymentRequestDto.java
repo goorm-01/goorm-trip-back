@@ -11,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 public class PaymentRequestDto {
     private String orderId;
-    private List<OrderPreviewRequestDto.ProductItemDto> productItem;
     private BigDecimal totalAmount;
     private String paymentMethod;
 }
