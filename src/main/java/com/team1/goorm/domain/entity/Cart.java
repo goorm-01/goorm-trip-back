@@ -3,6 +3,7 @@ package com.team1.goorm.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -26,4 +27,7 @@ public class Cart {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id") // FK
     private Product product;
+
+    @Column(name = "departure_date")
+    private LocalDate departureDate; // 출발 날짜
 }

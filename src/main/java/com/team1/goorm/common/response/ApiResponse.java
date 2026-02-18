@@ -23,6 +23,16 @@ public class ApiResponse<T> {
                 .build();
     }
 
+    // 생성 응답
+    public static <T> ApiResponse<T> create(String code, String message, T data) {
+        return ApiResponse.<T>builder()
+                .status(201)
+                .code(code)
+                .message(message)
+                .data(data)
+                .build();
+    }
+    
     // 실패 응답
     public static <T> ApiResponse<T> error(int status, String code, String message, T data) {
         return ApiResponse.<T>builder()
