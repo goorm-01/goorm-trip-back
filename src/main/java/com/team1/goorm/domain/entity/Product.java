@@ -2,6 +2,7 @@ package com.team1.goorm.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -31,4 +32,10 @@ public class Product {
 
     @Column(name = "category") // 상품 카테고리
     private String category;
+
+    @Column(name = "departure_date") // 출발일
+    private LocalDate departureDate;
+
+    @Column(name = "nights") // 숙박일수
+    private int nights;
 }

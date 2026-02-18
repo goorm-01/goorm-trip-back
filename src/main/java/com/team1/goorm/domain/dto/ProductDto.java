@@ -3,6 +3,8 @@ package com.team1.goorm.domain.dto;
 import com.team1.goorm.domain.entity.Product;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,6 +19,8 @@ public class ProductDto {
     private String image2;            // API의 Image2
     private String description;       // 직접 입력
     private String category;          // 직접 입력
+    private LocalDate departureDate;   // 출발일
+    private Integer nights;            // 숙박일수 (ex: 2박이면 2)
 
 
     // ProductDto
@@ -28,15 +32,19 @@ public class ProductDto {
             TourApiListResponseDto.Item item, // API에서 받아오는 데이터 객체
             Integer price,  // 가격 - 직접 입력
             String category,  // 카테고리 - 직접 입력
-            String description) { // 설명 - 직접 입력
+            String description,
+            LocalDate departureDate,
+            Integer nights) { // 설명 - 직접 입력
         return ProductDto.builder()
                 .productId(Long.parseLong(item.getContentid())) // String으로 받아오는 값을 Long으로 변환
                 .productName(item.getTitle()) // title을 productName으로 매핑
                 .price(price) // 값을 직접 입력
                 .image(item.getFirstimage()) // API에서 받아오는 이미지 URL
-                .image2(null) // 두번째 이미지, null로 일단 지정
-                .description(null) // 설명, null로 일단 지정
+                .image2(item.getFirstimage2()) // 두번째 이미지
+                .description(description) // 설명
                 .category(category) // 카테고리 값을 직접 입력
+                .departureDate(departureDate) // 출발일
+                .nights(nights) // 숙박일
                 .build(); // ProductDto 객체 생성
     }
 
@@ -52,6 +60,8 @@ public class ProductDto {
                 .image2(this.image2)
                 .description(this.description)
                 .category(this.category)
+                .departureDate(this.departureDate)
+                .nights(this.nights)
                 .build();
     }
 
@@ -67,6 +77,8 @@ public class ProductDto {
                 .image2(product.getImage2())
                 .description(product.getDescription())
                 .category(product.getCategory())
+                .departureDate(product.getDepartureDate())
+                .nights(product.getNights())
                 .build();
     }
 }
