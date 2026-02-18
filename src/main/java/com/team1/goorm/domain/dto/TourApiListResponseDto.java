@@ -34,6 +34,7 @@ public class TourApiListResponseDto {
     public static class Item {
         private String title;
         private String firstimage;
+        private String firstimage2;
         private String addr1;
         private String contentid;
         private String contenttypeid;
