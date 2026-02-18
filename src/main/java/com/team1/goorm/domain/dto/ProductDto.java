@@ -3,6 +3,8 @@ package com.team1.goorm.domain.dto;
 import com.team1.goorm.domain.entity.Product;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -11,7 +13,7 @@ public class ProductDto {
     private long productId;
     private String productName;
     private String category;
-    private int price;
+    private BigDecimal price;
     private String image;
 
     // 엔티티를 DTO로 변환
