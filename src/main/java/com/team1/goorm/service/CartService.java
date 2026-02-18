@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,13 +34,27 @@ public class CartService {
     // 장바구니의 목록을 추가, 요청을 받아 데이터를 정리하여 장바구니에 추가
     @Transactional
     public CartResponseDto addCart(CartRequestDto request) {
-        System.out.println("productId: " + request.getProductId());
         if (request.getQuantity() < 1) {
             throw new BusinessException(ErrorCode.INVALID_REQUEST);
         }
 
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        Optional<Cart> existingCart = cartRepository.findByUserIdAndProduct_ProductId(1L, request.getProductId());
+
+        // 중복처리, 이미 데이터가 있다면 quantity만 더하기
+        if (existingCart.isPresent()) {
+            Cart cart = existingCart.get();
+            Cart updatedCart = Cart.builder()
+                    .cartId(cart.getCartId())
+                    .userId(cart.getUserId())
+                    .quantity(cart.getQuantity() + request.getQuantity())
+                    .departureDate(request.getDepartureDate())
+                    .product(product)
+                    .build();
+            return CartResponseDto.fromEntity(cartRepository.save(updatedCart));
+        }
 
         Cart cart = Cart.builder()
                 .userId(1L)
