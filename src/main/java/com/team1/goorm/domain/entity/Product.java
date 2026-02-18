@@ -21,6 +21,9 @@ public class Product {
     @Column(name = "price") // 상품 가격
     private int price;
 
+    @Column(name = "addr") // 상품 주소
+    private String addr;
+
     @Column(name = "image") // 상품 이미지
     private String image;
 
