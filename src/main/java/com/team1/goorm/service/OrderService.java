@@ -9,6 +9,7 @@ import com.team1.goorm.domain.dto.PaymentResponseDto;
 import com.team1.goorm.domain.entity.*;
 import com.team1.goorm.repository.OrderRepository;
 import com.team1.goorm.repository.PaymentRepository;
+import com.team1.goorm.repository.ProductRepository;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.Id;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -27,6 +29,7 @@ import java.util.*;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
+    private final ProductRepository productRepository;
 
     @Transactional
     public OrderPreviewResponseDto createOrder(OrderPreviewRequestDto requestDto, User user) {
@@ -35,7 +38,7 @@ public class OrderService {
                 .user(user)
                 .status(OrderStatus.READY)
                 .createdAt(LocalDateTime.now())
-                .orderNumber("temp_id")
+                .orderNumber("temp_order_number")
                 .build();
         Order savedOrder = orderRepository.save(order);
 
@@ -49,7 +52,7 @@ public class OrderService {
 
         // 상품 가격 계산을 위한 Map 생성(key - id, value - Product)
         Map<Long, Product> productMap = new HashMap<>();
-        products.forEach(product -> productMap.put(product.getId(), product));
+        products.forEach(product -> productMap.put(product.getProductId(), product));
 
         // 상품의 총 가격 계산
         BigDecimal totalAmount = BigDecimal.ZERO;
@@ -62,7 +65,9 @@ public class OrderService {
 
             totalAmount = totalAmount.add(product.getPrice().multiply(BigDecimal.valueOf(itemDto.getQuantity())));
 
-            orderProducts.add(new OrderProduct(product.getId(), itemDto.getQuantity(), product.getPrice()));
+            LocalDate departure = itemDto.getDepartureDate();
+
+            orderProducts.add(new OrderProduct(product, itemDto.getQuantity(), product.getPrice(), departure));
         }
 
         // 임시 저장된 주문 업데이트
@@ -101,7 +106,7 @@ public class OrderService {
 
     // 주문명 생성 메서드
     private String createOrderName(List<Product> products) {
-        String mainProductName = products.getFirst().getName();
+        String mainProductName = products.getFirst().getProductName();
         String orderName = products.size() > 1
                 ? mainProductName + " 외 " + (products.size() - 1) + "건"
                 : mainProductName;
@@ -137,22 +142,11 @@ public class OrderService {
         }
     }
 
-    // 나중에 진짜 Repo로 교체할 메서드
+    // 주문의 상품들을 찾는 메서드
     private List<Product> getProducts(List<Long> ids) {
         return ids.stream()
-                .map(id -> new Product(id, "임시 상품 " + id, new BigDecimal("10000.00")))
+                .map(id -> productRepository.findById(id)
+                        .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_REQUEST)))
                 .toList();
-    }
-
-    // 임시 Product 엔티티
-    @Entity
-    @Getter
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @AllArgsConstructor
-    public static class Product {
-        @Id
-        private Long id;
-        private String name;
-        private BigDecimal price;
     }
 }

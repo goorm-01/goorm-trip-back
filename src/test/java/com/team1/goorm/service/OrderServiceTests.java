@@ -6,12 +6,10 @@ import com.team1.goorm.domain.dto.OrderPreviewRequestDto;
 import com.team1.goorm.domain.dto.OrderPreviewResponseDto;
 import com.team1.goorm.domain.dto.PaymentRequestDto;
 import com.team1.goorm.domain.dto.PaymentResponseDto;
-import com.team1.goorm.domain.entity.Order;
-import com.team1.goorm.domain.entity.OrderStatus;
-import com.team1.goorm.domain.entity.Payment;
-import com.team1.goorm.domain.entity.User;
+import com.team1.goorm.domain.entity.*;
 import com.team1.goorm.repository.OrderRepository;
 import com.team1.goorm.repository.PaymentRepository;
+import com.team1.goorm.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +38,9 @@ public class OrderServiceTests {
     @Mock
     private PaymentRepository paymentRepository;
 
+    @Mock
+    private ProductRepository productRepository;
+
     @InjectMocks
     private OrderService orderService;
 
@@ -53,8 +55,14 @@ public class OrderServiceTests {
     @DisplayName("주문 미리보기 생성 성공")
     void testCreateOrder() {
         // Given
-        OrderPreviewRequestDto.ProductItemDto item1 = new OrderPreviewRequestDto.ProductItemDto(1L, 2); // 10000 * 2
-        OrderPreviewRequestDto.ProductItemDto item2 = new OrderPreviewRequestDto.ProductItemDto(2L, 1); // 10000 * 1
+        Product mockProduct1 = new Product(1L, "임시상품1", new BigDecimal("10000.00"), null, null, null, null, null, 2);
+        Product mockProduct2 = new Product(2L, "임시상품2", new BigDecimal("10000.00"), null, null, null, null, null, 2);
+
+        given(productRepository.findById(1L)).willReturn(Optional.of(mockProduct1));
+        given(productRepository.findById(2L)).willReturn(Optional.of(mockProduct2));
+
+        OrderPreviewRequestDto.ProductItemDto item1 = new OrderPreviewRequestDto.ProductItemDto(1L, 2, LocalDate.parse("2026-02-18")); // 10000 * 2
+        OrderPreviewRequestDto.ProductItemDto item2 = new OrderPreviewRequestDto.ProductItemDto(2L, 1, LocalDate.parse("2026-02-18")); // 10000 * 1
         OrderPreviewRequestDto requestDto = new OrderPreviewRequestDto(List.of(item1, item2));
 
         Order tempOrder = Order.builder().id(100L).user(mockUser).build();
@@ -67,7 +75,8 @@ public class OrderServiceTests {
 
         // Then
         assertThat(result.getOrderName()).contains("외 1건");
-        assertThat(result.getOrderId()).startsWith("ORD-");
+        assertThat(result.getOrderNumber()).startsWith("ORD-");
+        assertThat(result.getOrderProducts().getFirst().getStartDate()).isEqualTo(LocalDate.of(2026, 2, 18));
         verify(orderRepository, times(1)).save(any(Order.class));
     }
 

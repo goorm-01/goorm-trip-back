@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -22,9 +23,9 @@ public class OrderProduct {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    // Product Entity가 없는 관계로 product id 조인 생략
-    // 추후 Product Entity 작성 완료 시 수정
-    private Long productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     // 사용자가 담은 상품 수
     @Column(name = "quantity")
@@ -34,14 +35,19 @@ public class OrderProduct {
     @Column(name = "price")
     private BigDecimal price;
 
+    // 출발 날짜
+    @Column(name = "departure_date")
+    private LocalDate departureDate;
+
     /** 주문 연결 메서드 */
     public void setOrder(Order order) {
         this.order = order;
     }
 
-    public OrderProduct(Long productId, int quantity, BigDecimal price) {
-        this.productId = productId;
+    public OrderProduct(Product product, int quantity, BigDecimal price, LocalDate departureDate) {
+        this.product = product;
         this.quantity = quantity;
         this.price = price;
+        this.departureDate = departureDate;
     }
 }

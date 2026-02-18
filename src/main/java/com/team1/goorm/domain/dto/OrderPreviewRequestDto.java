@@ -3,6 +3,7 @@ package com.team1.goorm.domain.dto;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -22,5 +23,7 @@ public class OrderPreviewRequestDto {
         private Long productId;
         @NotNull
         private int quantity;
+        @NotNull
+        private LocalDate departureDate;
     }
 }

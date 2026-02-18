@@ -1,11 +1,15 @@
 package com.team1.goorm.domain.dto;
 
 import com.team1.goorm.domain.entity.Order;
+import com.team1.goorm.domain.entity.OrderProduct;
 import com.team1.goorm.domain.entity.OrderStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Builder
@@ -13,29 +17,24 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class OrderPreviewResponseDto {
     private String orderName;
-    private String orderId; // ORD-20260215-1 형태
+    private String orderNumber; // ORD-20260215-1 형태
     private OrderStatus status;
-    private LocalDateTime createdAt;
-    private UserInfoDto userInfo;
+    private List<OrderProductDto> orderProducts;
+    private BigDecimal totalPrice;
 
-    @Getter
-    @Builder
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @AllArgsConstructor
-    public static class UserInfoDto {
-        @NotNull
-        private String name;
-        @NotNull
-        private String email;
-    }
 
     public static OrderPreviewResponseDto from(Order order) {
+        List<OrderProductDto> orderProducts = new ArrayList<>();
+        for (OrderProduct orderProduct : order.getOrderProducts()) {
+            orderProducts.add(OrderProductDto.from(orderProduct));
+        }
+
         return OrderPreviewResponseDto.builder()
                 .orderName(order.getOrderName())
-                .orderId(order.getOrderNumber())
+                .orderNumber(order.getOrderNumber())
                 .status(order.getStatus())
-                .createdAt(order.getCreatedAt())
-                .userInfo(new UserInfoDto(order.getUser().getName(), order.getUser().getEmail()))
+                .orderProducts(orderProducts)
+                .totalPrice(order.getTotalAmount())
                 .build();
     }
 }
