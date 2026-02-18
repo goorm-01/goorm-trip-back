@@ -2,6 +2,8 @@ package com.team1.goorm.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -19,7 +21,7 @@ public class Product {
     private String productName;
 
     @Column(name = "price") // 상품 가격
-    private int price;
+    private BigDecimal price;
 
     @Column(name = "addr") // 상품 주소
     private String addr;

@@ -7,21 +7,23 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class CartResponseDto {
     private String productName; // 상품 이름
-    private int price; // 상품 가격
+    private BigDecimal price; // 상품 가격
     private int quantity; // 상품 갯수
-    private int totalPrice; // 전체 상품 가격
+    private BigDecimal totalPrice; // 전체 상품 가격
     private String image; // 상품 이미지
     private String category; // 카테고리
 
     public static CartResponseDto fromEntity(Cart cart) {
 
-        int price = cart.getProduct().getPrice();
+        BigDecimal price = cart.getProduct().getPrice();
         int quantity = cart.getQuantity();
 
         return CartResponseDto.builder()
@@ -30,7 +32,7 @@ public class CartResponseDto {
                 .quantity(cart.getQuantity())
                 .image(cart.getProduct().getImage())
                 .category(cart.getProduct().getCategory())
-                .totalPrice(price * quantity)
+                .totalPrice(price.multiply(BigDecimal.valueOf(quantity)))
                 .build();
     }
 
