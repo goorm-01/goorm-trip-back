@@ -20,7 +20,8 @@ public enum ErrorCode {
     CARD_DECLINED(HttpStatus.PAYMENT_REQUIRED, "한도 초과 또는 잔액이 부족합니다."),
     // 404
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자 정보를 찾을 수 없습니다."),
-    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 상품입니다.");
+    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 상품입니다."),
+    REGION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 지역에 상품이 없습니다.");
 
 
     private final HttpStatus httpStatus;

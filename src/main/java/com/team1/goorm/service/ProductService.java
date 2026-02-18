@@ -60,7 +60,7 @@ public class ProductService {
                 .collect(Collectors.toList());
 
         if (products.isEmpty()) {
-            throw new BusinessException(ErrorCode.PRODUCT_NOT_FOUND);
+            throw new BusinessException(ErrorCode.REGION_NOT_FOUND);
         }
 
         return products;
