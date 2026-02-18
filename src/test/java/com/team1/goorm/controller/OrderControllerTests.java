@@ -110,14 +110,13 @@ public class OrderControllerTests {
         // Request DTO
         PaymentRequestDto requestDto = PaymentRequestDto.builder()
                 .orderId("ORD-20260215-1")
-                .productItem(List.of(item1, item2))
                 .paymentMethod("CARD")
                 .totalAmount(new BigDecimal("30000.00"))
                 .build();
 
         // 서비스가 리턴할 Response DTO
         PaymentResponseDto responseDto = PaymentResponseDto.builder()
-                .orderId("ORD-20260216-1")
+                .orderNumber("ORD-20260216-1")
                 .paymentKey("PAY-METHOD-CARD-XYZ123") // 서비스에서 생성될 포맷 상상
                 .status(OrderStatus.DONE) // order.markAsDone() 반영 결과
                 .requestedAt(LocalDateTime.now())
@@ -137,7 +136,7 @@ public class OrderControllerTests {
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("PAYMENT_SUCCESS"))
-                .andExpect(jsonPath("$.data.order_id").value("ORD-20260216-1"))
+                .andExpect(jsonPath("$.data.order_number").value("ORD-20260216-1"))
                 .andExpect(jsonPath("$.data.status").value("DONE")) // 상태 변경 확인
                 .andDo(print());
     }
