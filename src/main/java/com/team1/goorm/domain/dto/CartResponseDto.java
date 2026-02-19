@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class CartResponseDto {
-    private int cartId;
+    private Long cartId;
     private String productName; // 상품 이름
     private BigDecimal price; // 상품 가격
     private int quantity; // 상품 갯수

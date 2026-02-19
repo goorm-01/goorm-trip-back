@@ -16,7 +16,7 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 번호 자동 증가
     @Column(name = "cart_id") // 장바구니 id
-    private int cartId;
+    private Long cartId;
 
     @Column(name = "quantity") // 상품 수량
     private int quantity;

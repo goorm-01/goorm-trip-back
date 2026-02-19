@@ -19,22 +19,28 @@ public class CartController {
 
     // 장바구니 목록 조회
     @GetMapping
-    public ResponseEntity<ApiResponse<List<CartResponseDto>>> getCartList() {
+    public ResponseEntity<ApiResponse<List<CartResponseDto>>> getCartList(
+            @RequestHeader("X-User-Id") Long userId
+    ) {
         return ResponseEntity.ok(
-                ApiResponse.success("SUCCESS", "장바구니 조회에 성공했습니다.", cartService.getCartList())
+                ApiResponse.success("SUCCESS", "장바구니 조회에 성공했습니다.", cartService.getCartList(userId))
         );
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<CartResponseDto>> addCart(@RequestBody CartRequestDto request) {
+    public ResponseEntity<ApiResponse<CartResponseDto>> addCart(
+            @RequestHeader("X-User-Id") Long userId,
+            @RequestBody CartRequestDto request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                ApiResponse.create("CART_ADD_SUCCESS", "장바구니에 상품이 추가되었습니다.", cartService.addCart(request))
+                ApiResponse.create("CART_ADD_SUCCESS", "장바구니에 상품이 추가되었습니다.", cartService.addCart(userId, request))
         );
     }
 
     @DeleteMapping("/{cartId}")
-    public ResponseEntity<ApiResponse<Void>> deleteCart(@PathVariable Long cartId) {
-        cartService.deleteCart(cartId);
+    public ResponseEntity<ApiResponse<Void>> deleteCart(
+            @RequestHeader("X-User-Id") Long userId,
+            @PathVariable Long cartId) {
+        cartService.deleteCart(userId, cartId);
         return ResponseEntity.ok(
                 ApiResponse.success("CART_DELETE_SUCCESS", "장바구니 상품이 삭제되었습니다.", null)
         );
