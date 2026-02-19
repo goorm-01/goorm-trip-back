@@ -4,11 +4,11 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class CartRequestDto {
-    private long productId; // 상품 Id
+    private Long productId; // 상품 Id
     private int quantity; // 수량
-    private LocalDate departureDate;
+    private LocalDate departureDate; // 출발 날짜
 }

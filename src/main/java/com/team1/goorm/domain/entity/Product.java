@@ -32,7 +32,7 @@ public class Product {
     @Column(name = "image_2") // 상품 이미지 2
     private String image2;
 
-    @Column(name = "description") // 상품 설명
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "category") // 상품 카테고리
