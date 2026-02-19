@@ -71,13 +71,10 @@ public class CartService {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new BusinessException((ErrorCode.INVALID_REQUEST)));
 
-        if (!cart.getCartId().equals(cartId)) {
+        if (!cart.getUserId().equals(userId)) {
             throw new BusinessException(ErrorCode.INVALID_REQUEST);
         }
 
-        if (!cartRepository.existsById(cartId)) {
-            throw new BusinessException(ErrorCode.INVALID_REQUEST);
-        }
         cartRepository.deleteById(cartId);
     }
 }

@@ -52,7 +52,7 @@ class CartServiceTest {
     // Cart 객체 생성
     private Cart createCart(Product product) {
         return Cart.builder()
-                .cartId(1)
+                .cartId(1L)
                 .userId(1L)
                 .quantity(2)
                 .departureDate(LocalDate.of(2026, 2, 18))
@@ -81,7 +81,7 @@ class CartServiceTest {
         given(cartRepository.save(any(Cart.class))).willReturn(cart);
 
         // 테스트 메서드 호출
-        CartResponseDto response = cartService.addCart(request);
+        CartResponseDto response = cartService.addCart(1L, request);
 
 
         assertThat(response.getProductName()).isEqualTo("경복궁"); // 상품명 확인
@@ -100,7 +100,7 @@ class CartServiceTest {
         given(productRepository.findById(999L)).willReturn(Optional.empty());
 
         // 예외 처리가 되는지 확인
-        assertThatThrownBy(() -> cartService.addCart(request))
+        assertThatThrownBy(() -> cartService.addCart(1L, request))
                 .isInstanceOf(BusinessException.class)
                 .hasMessageContaining(ErrorCode.PRODUCT_NOT_FOUND.getMessage());
     }
@@ -113,7 +113,7 @@ class CartServiceTest {
         CartRequestDto request = new CartRequestDto(5L, 0, LocalDate.of(2026, 2, 19));
 
         // 수량이 0이면 예외 처리 되는지 확인
-        assertThatThrownBy(() -> cartService.addCart(request))
+        assertThatThrownBy(() -> cartService.addCart(1L, request))
                 .isInstanceOf(BusinessException.class)
                 .hasMessageContaining(ErrorCode.INVALID_REQUEST.getMessage());
     }
@@ -129,7 +129,7 @@ class CartServiceTest {
         given(cartRepository.findAllByUserIdWithProduct(1L)).willReturn(List.of(cart));
 
         // 실제 데이터 조회
-        List<CartResponseDto> result = cartService.getCartList();
+        List<CartResponseDto> result = cartService.getCartList(1L);
 
         // 결과를 검증
         assertThat(result).hasSize(1);
@@ -141,11 +141,14 @@ class CartServiceTest {
     @DisplayName("장바구니 삭제 - 성공")
     void deleteCart_success() {
 
+        Product product = createProduct();
+        Cart cart = createCart(product);
+
         // 장바구니가 존재하면 true를 반환
-        given(cartRepository.existsById(1L)).willReturn(true);
+        given(cartRepository.findById(1L)).willReturn(Optional.of(cart));
 
         // 장바구니 삭제
-        cartService.deleteCart(1L);
+        cartService.deleteCart(1L, 1L);
 
         // 실제 호출이 되었는지 확인
         verify(cartRepository).deleteById(1L);  // deleteById가 실제로 호출됐는지 확인
@@ -156,10 +159,10 @@ class CartServiceTest {
     void deleteCart_fail_cartNotFound() {
 
         // 잘못된 Id를 넣으면 false를 반환
-        given(cartRepository.existsById(999L)).willReturn(false);
+        given(cartRepository.findById(999L)).willReturn(Optional.empty());
 
         // 존재하지 않는 cartId를 삭제하면 예외 처리가 되는지 확인
-        assertThatThrownBy(() -> cartService.deleteCart(999L))
+        assertThatThrownBy(() -> cartService.deleteCart(1L, 999L))
                 .isInstanceOf(BusinessException.class)
                 .hasMessageContaining(ErrorCode.INVALID_REQUEST.getMessage());
     }

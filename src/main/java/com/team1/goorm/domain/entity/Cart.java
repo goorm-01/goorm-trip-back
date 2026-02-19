@@ -22,7 +22,8 @@ public class Cart {
     private int quantity;
 
     @Column(name = "user_id") // 유저 id
-    private long userId;
+//    private long userId;
+    private Long userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id") // FK

@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -60,10 +61,11 @@ class CartControllerTest {
         CartResponseDto response = createCartResponseDto();
 
         // response 반환
-        given(cartService.addCart(any(CartRequestDto.class))).willReturn(response);
+        given(cartService.addCart(any(Long.class), any(CartRequestDto.class))).willReturn(response);
 
         // 응답 검증
         mockMvc.perform(post("/api/v1/carts")
+                        .header("X-User-Id", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))) // 요청 body
                 .andDo(print())
@@ -82,10 +84,11 @@ class CartControllerTest {
         CartRequestDto request = new CartRequestDto(999L, 2, LocalDate.of(2026, 2, 18));
 
         // 예외 처리가 되는지
-        given(cartService.addCart(any(CartRequestDto.class)))
+        given(cartService.addCart(any(Long.class), any(CartRequestDto.class)))
                 .willThrow(new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
 
         mockMvc.perform(post("/api/v1/carts")
+                        .header("X-User-Id", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -101,10 +104,11 @@ class CartControllerTest {
         CartResponseDto response = createCartResponseDto();
 
         // 목록이 반환되는지
-        given(cartService.getCartList()).willReturn(List.of(response));
+        given(cartService.getCartList(any(Long.class))).willReturn(List.of(response));
 
         // 응답 검증
-        mockMvc.perform(get("/api/v1/carts"))
+        mockMvc.perform(get("/api/v1/carts")
+                        .header("X-User-Id", 1L))
                 .andDo(print())
                 .andExpect(status().isOk()) // 200 응답 확인
                 .andExpect(jsonPath("$.status").value(200)) // status 필드 확인
@@ -117,7 +121,8 @@ class CartControllerTest {
     void deleteCart_success() throws Exception {
 
         // delete 요청
-        mockMvc.perform(delete("/api/v1/carts/1"))
+        mockMvc.perform(delete("/api/v1/carts/1")
+                        .header("X-User-Id", 1L))
                 .andDo(print())
                 .andExpect(status().isOk()) // 200 응답 확인
                 .andExpect(jsonPath("$.code").value("CART_DELETE_SUCCESS")); // 코드 확인
@@ -129,10 +134,11 @@ class CartControllerTest {
 
         // 없는 cartId 일때
         doThrow(new BusinessException(ErrorCode.INVALID_REQUEST))
-                .when(cartService).deleteCart(999L);
+                .when(cartService).deleteCart(any(Long.class), eq(999L));
 
         // 예외 처리 확인
-        mockMvc.perform(delete("/api/v1/carts/999"))
+        mockMvc.perform(delete("/api/v1/carts/999")
+                        .header("X-User-Id", 1L))
                 .andDo(print())
                 .andExpect(status().isNotFound()) // 404 응답 확인
                 .andExpect(jsonPath("$.code").value("INVALID_REQUEST")); // 에러 코드 확인
