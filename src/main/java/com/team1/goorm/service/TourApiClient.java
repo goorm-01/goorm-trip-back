@@ -17,10 +17,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class TourApiClient {
-    @Value("${external.api.tour.base-url}")
+    @Value("${external.api.tour.base-url:}")
     private String baseUrl;
 
-    @Value("${external.api.tour.service-key}")
+    @Value("${external.api.tour.service-key:}")
     private String serviceKey;
 
     private final RestTemplate restTemplate;
