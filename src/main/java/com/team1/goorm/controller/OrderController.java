@@ -28,7 +28,7 @@ public class OrderController {
     private final UserRepository userRepository;
 
     @PostMapping("/orders/preview")
-    @Operation(summary = "주문 확인")
+    @Operation(summary = "주문 확인 요청")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "사용자 없음")
@@ -51,7 +51,7 @@ public class OrderController {
     }
 
     @PostMapping("/orders/payment")
-    @Operation(summary = "장바구니 목록 조회")
+    @Operation(summary = "결제 요청")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "처리할 수 없는 요청"),
