@@ -10,6 +10,8 @@ import com.team1.goorm.domain.dto.PaymentResponseDto;
 import com.team1.goorm.domain.entity.User;
 import com.team1.goorm.repository.UserRepository;
 import com.team1.goorm.service.OrderService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,11 @@ public class OrderController {
     private final UserRepository userRepository;
 
     @PostMapping("/orders/preview")
+    @Operation(summary = "주문 확인")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "사용자 없음")
+    })
     public ResponseEntity<ApiResponse<OrderPreviewResponseDto>> createOrderPreview(
             @RequestHeader("X-User-Id") Long userId,
             @RequestBody  OrderPreviewRequestDto requestDto
@@ -44,6 +51,12 @@ public class OrderController {
     }
 
     @PostMapping("/orders/payment")
+    @Operation(summary = "장바구니 목록 조회")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "처리할 수 없는 요청"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "사용자 없음")
+    })
     public ResponseEntity<ApiResponse<PaymentResponseDto>> createPayment(
             @RequestHeader("X-User-Id") Long userId,
             @RequestBody PaymentRequestDto requestDto
