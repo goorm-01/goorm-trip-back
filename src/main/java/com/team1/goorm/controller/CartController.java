@@ -4,6 +4,8 @@ import com.team1.goorm.common.response.ApiResponse;
 import com.team1.goorm.domain.dto.CartRequestDto;
 import com.team1.goorm.domain.dto.CartResponseDto;
 import com.team1.goorm.service.CartService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,11 @@ public class CartController {
 
     // 장바구니 목록 조회
     @GetMapping
+    @Operation(summary = "장바구니 목록 조회")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "장바구니 없음")
+    })
     public ResponseEntity<ApiResponse<List<CartResponseDto>>> getCartList(
             @RequestHeader("X-User-Id") Long userId
     ) {
@@ -28,6 +35,12 @@ public class CartController {
     }
 
     @PostMapping
+    @Operation(summary = "장바구니 상품 추가")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "처리할 수 없는 요청"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "상품 없음")
+    })
     public ResponseEntity<ApiResponse<CartResponseDto>> addCart(
             @RequestHeader("X-User-Id") Long userId,
             @RequestBody CartRequestDto request) {
@@ -37,6 +50,11 @@ public class CartController {
     }
 
     @DeleteMapping("/{cartId}")
+    @Operation(summary = "장바구니 상품 제거")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "처리할 수 없는 요청")
+    })
     public ResponseEntity<ApiResponse<Void>> deleteCart(
             @RequestHeader("X-User-Id") Long userId,
             @PathVariable Long cartId) {
