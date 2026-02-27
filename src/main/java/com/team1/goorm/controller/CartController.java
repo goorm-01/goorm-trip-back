@@ -35,7 +35,7 @@ public class CartController {
     }
 
     @PostMapping
-    @Operation(summary = "장바구니에 상품 추가")
+    @Operation(summary = "장바구니 상품 추가")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "처리할 수 없는 요청"),
