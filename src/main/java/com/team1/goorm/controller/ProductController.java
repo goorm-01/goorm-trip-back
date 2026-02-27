@@ -34,7 +34,7 @@ public class ProductController {
 
     // productId를 통한 상세 정보 조회
     @GetMapping("/{productId}")
-    @Operation(summary = "장바구니 목록 조회")
+    @Operation(summary = "상품 상세 조회")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "상품 없음")
@@ -47,7 +47,7 @@ public class ProductController {
 
     // 카테고리별 조회
     @GetMapping("category/{category}")
-    @Operation(summary = "장바구니 목록 조회")
+    @Operation(summary = "카테고리별 조회")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "상품 없음")
@@ -60,7 +60,7 @@ public class ProductController {
 
     // 지역별 조회
     @GetMapping("/region/{region}")
-    @Operation(summary = "장바구니 목록 조회")
+    @Operation(summary = "지역별 조회")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "상품 없음")
