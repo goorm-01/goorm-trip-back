@@ -16,6 +16,7 @@ import java.time.LocalDate;
 @Builder
 public class CartResponseDto {
     private Long cartId;
+    private Long productId;
     private String productName; // 상품 이름
     private BigDecimal price; // 상품 가격
     private int quantity; // 상품 갯수
@@ -31,6 +32,7 @@ public class CartResponseDto {
 
         return CartResponseDto.builder()
                 .cartId(cart.getCartId())
+                .productId(cart.getProduct().getProductId())
                 .productName(cart.getProduct().getProductName())
                 .price(cart.getProduct().getPrice())
                 .quantity(cart.getQuantity())
