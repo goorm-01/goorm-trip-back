@@ -18,7 +18,8 @@ public class CorsConfig {
                         .allowedOrigins(
                                 "http://localhost:3000",
                                 "http://localhost:5173",
-                                "http://localhost:8080"
+                                "http://localhost:8080",
+                                "https://goorm-trip-front.vercel.app"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
                         .allowedHeaders("*")
